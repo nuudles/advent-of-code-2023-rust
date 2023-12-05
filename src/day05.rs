@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 use itertools::Itertools;
 
@@ -7,7 +7,7 @@ use crate::{parse_nums::parse_nums, selfprint::SelfPrint};
 pub fn part1(input: String) {
     let mut mappings: Vec<Vec<(usize, usize, usize)>> = vec![];
 
-    for (index, section) in input.split("\n\n").skip(1).enumerate() {
+    for section in input.split("\n\n").skip(1) {
         let mut map = vec![];
         for line in section.lines().skip(1) {
             let numbers = parse_nums::<usize>(line);
