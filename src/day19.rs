@@ -98,18 +98,18 @@ pub fn part1(input: String) {
     //     .print();
 }
 
-fn find_ranges(
+fn acceptable_count(
     ranges: &[HashSet<u64>; 4],
     from: &str,
     workflows: &HashMap<&str, Vec<Expression>>,
-) -> Vec<[HashSet<u64>; 4]> {
+) -> usize {
     if from == "A" {
-        return vec![ranges.clone()];
+        return ranges.iter().map(|r| r.len()).product::<usize>();
     } else if from == "R" {
-        return vec![];
+        return 0;
     }
 
-    let mut acceptable_ranges = vec![];
+    let mut count = 0;
 
     let mut current_ranges = ranges.clone();
 
@@ -131,11 +131,7 @@ fn find_ranges(
 
                 let mut matching_ranges = current_ranges.clone();
                 matching_ranges[*index] = matching_range.clone();
-                acceptable_ranges.append(&mut find_ranges(
-                    &matching_ranges,
-                    *destination,
-                    workflows,
-                ));
+                count += acceptable_count(&matching_ranges, *destination, workflows);
 
                 current_ranges[*index] = current_ranges[*index]
                     .difference(&matching_range)
@@ -143,16 +139,12 @@ fn find_ranges(
                     .collect();
             }
             Expression::Destination(destination) => {
-                acceptable_ranges.append(&mut find_ranges(
-                    &current_ranges,
-                    *destination,
-                    workflows,
-                ));
+                count += acceptable_count(&current_ranges, *destination, workflows);
             }
         }
     }
 
-    acceptable_ranges
+    count
 }
 
 pub fn part2(input: String) {
@@ -166,7 +158,7 @@ pub fn part2(input: String) {
         });
 
     let all_possible = (1..=4000).collect::<HashSet<u64>>();
-    let acceptable = find_ranges(
+    acceptable_count(
         &[
             all_possible.clone(),
             all_possible.clone(),
@@ -175,10 +167,6 @@ pub fn part2(input: String) {
         ],
         "in",
         &workflows,
-    );
-    acceptable
-        .iter()
-        .map(|r| r.iter().map(|s| s.len()).product::<usize>())
-        .sum::<usize>()
-        .print();
+    )
+    .print();
 }
