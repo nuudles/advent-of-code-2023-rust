@@ -95,7 +95,7 @@ pub fn part1(input: String) {
     println!("Part 1: {}", bricks.len() - not_disintegratable.len());
 
     let mut count = 0;
-    for to_disintegrate in bricks.iter().filter(|b| not_disintegratable.contains(b)) {
+    for to_disintegrate in not_disintegratable {
         let after_disintegrating = bricks
             .iter()
             .filter(|b| b != &to_disintegrate)
